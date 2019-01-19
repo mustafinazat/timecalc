@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<title>Калькулятор разницы времени старта и финиша</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+   <link href="http://bootstrap-3.ru/dist/css/bootstrap.min.css" rel="stylesheet">
+   <script src="http://code.jquery.com/jquery.min.js" type="text/javascript"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<body>
+
+<script>
+var app = angular.module("myShoppingList", []); 
+
+
+app.filter('getTime', function() {
+    return function(result) {
+        var resStartInSec, resFinishInSec, delta ;
+		if ( result.start.split('.')[0] > 24 || result.start.split('.')[0]<0) { return "Часы  старта в неправильном диапазоне" }
+		if ( result.start.split('.')[1] > 59 || result.start.split('.')[1]<0) { return "Минуты старта в неправильном диапазоне"}
+		if ( result.start.split('.')[2] > 59 || result.start.split('.')[2]<0) { return "Секунды старта в неправильном диапазоне" }
+		
+		if ( result.finish.split('.')[0] > 24 || result.finish.split('.')[0]<0) { return "Часы  финиша в неправильном диапазоне" }
+		if ( result.finish.split('.')[1] > 59 || result.finish.split('.')[1]<0) { return "Минуты финиша в неправильном диапазоне"}
+		if ( result.finish.split('.')[2] > 59 || result.finish.split('.')[2]<0) { return"Секунды финиша в неправильном диапазоне" }
+		
+		
+		resStartInSec = result.start.split('.')[0]*3600 + result.start.split('.')[1]*60+ result.start.split('.')[2]*1;
+		resFinishInSec = result.finish.split('.')[0]*3600 + result.finish.split('.')[1]*60+ result.finish.split('.')[2]*1;
+       delta = resFinishInSec - resStartInSec;
+	   
+	   var h = delta/3600 ^ 0 ;
+       var m = (delta-h*3600)/60 ^ 0 ;
+       var s = delta-h*3600-m*60 ;
+        return ((h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s));
+    };
+});
+
+app.filter('getSec', function() {
+    return function(result) {
+        var resStartInSec, resFinishInSec, delta ;
+		resStartInSec = result.start.split('.')[0]*3600 + result.start.split('.')[1]*60+ result.start.split('.')[2]*1
+		resFinishInSec = result.finish.split('.')[0]*3600 + result.finish.split('.')[1]*60+ result.finish.split('.')[2]*1
+       delta = resFinishInSec - resStartInSec;
+
+        return delta;
+    };
+});
+
+app.controller("myCtrl", function($scope) {
+    $scope.results = [];
+    $scope.addItem = function () {
+        $scope.errortext = "";
+        if (!$scope.addNumber) {
+		
+		return;
+		}
+		if (!$scope.addSt) {return;}
+		if (!$scope.addFin) {return;}
+       // if ($scope.rezults.indexOf($scope.addNumber) == -1) {
+            $scope.results.push({number:$scope.addNumber, start: $scope.addSt, finish: $scope.addFin });
+        //} else {
+          //  $scope.errortext = "The item is already in your shopping list.";
+        //}
+    }
+	
+	
+    $scope.removeItem = function (x) {
+        $scope.errortext = "";    
+        $scope.results.splice(x, 1);
+    }
+	
+
+	 
+	 
+	 
+        $scope.myOrderBy =  function(result) {
+		
+		  var resStartInSec, resFinishInSec, delta ;
+		resStartInSec = result.start.split('.')[0]*3600 + result.start.split('.')[1]*60+ result.start.split('.')[2]*1
+		resFinishInSec = result.finish.split('.')[0]*3600 + result.finish.split('.')[1]*60+ result.finish.split('.')[2]*1
+       delta = resFinishInSec - resStartInSec;
+
+        return delta;
+   
+};
+    
+});
+
+
+
+$(document).ready(function(){
+
+$('.time').keypress(function(e) {
+
+if (!(e.which==8 || e.which==44 ||e.which==45 ||e.which==46 ||(e.which>47 && e.which<58))) return false;
+
+});
+
+
+
+$('.time').keyup(function(e) {
+
+if ($(this).val().length>3) return false;
+
+});
+
+
+});
+
+
+
+</script>
+
+<div ng-app="myShoppingList" ng-cloak ng-controller="myCtrl" class="container" style="width:100%;">
+  
+  
+  
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Ввод данных</h3>
+  </div>
+  <div class="panel-body">
+   <div class="panel-body">
+  Время вводится через точку в формате чч.мм.сс (возможен ввод только точек и цифр)
+  </div>
+  
+  <form role="form">
+<div class="row">
+  <div class="col-xs-12 col-sm-3">
+    <input type="number" class="form-control" placeholder="Номер" ng-model="addNumber" >
+  </div>
+  <div class="col-xs-12 col-sm-3">
+    <input type="tel" class="form-control time" placeholder="Время старт" ng-model="addSt" maxlength="8">
+  </div>
+  <div class="col-xs-12 col-sm-3">
+    <input type="tel"  class="form-control time" placeholder="Время финиш" ng-model="addFin" maxlength="8">
+ </div>
+  
+  <div class="col-xs-12 col-sm-3">
+    <button ng-click="addItem()" type="submit"  class="btn btn-primary">Добавить</button>
+   </div>
+</div>
+</form>
+  </div>
+</div>
+
+
+
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Участники</h3>
+  </div>
+  <div class="panel-body">
+  
+  <div class="input-group">
+  <span class="input-group-addon">№</span>
+  <input type="text" class="form-control" ng-model="number" placeholder="Поиск по номеру"> 
+  
+</div>
+<hr>
+
+  <div class="panel-body">
+  Сортировка производится по времени
+  </div>
+
+ <table class="table  table-bordered">
+<tr>
+    <td>#</td>
+    <td>Номер</td>
+	<td>Время(старт)</td>
+	<td>Время(финиш)</td>
+	<td>Итог</td>
+
+	
+  </tr>
+  <tbody>
+  <tr ng-repeat="result in results | filter : number | orderBy: myOrderBy track by $index ">
+    <td>{{ $index + 1 }}</td>
+	<td>{{ result.number }}</td>
+    <td>{{ result.start }}</td>
+    <td>{{ result.finish }}</td>
+    <td>{{ result |getTime }}</td>
+
+   
+    
+	 <td>
+	 <button type="button" ng-click="removeItem($index)" class="btn btn-danger">×</button>
+	</td>
+  </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+
+
+
+
+
+   <p class="w3-text-red">{{errortext}}</p>
+ 
+</div>
+
+</body>
+</html>
