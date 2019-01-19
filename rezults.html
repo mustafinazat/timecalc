@@ -135,10 +135,10 @@ if ($(this).val().length>3) return false;
     <input type="number" class="form-control" placeholder="Номер" ng-model="addNumber" >
   </div>
   <div class="col-xs-12 col-sm-3">
-    <input type="tel" class="form-control time" placeholder="Время старт" ng-model="addSt" maxlength="8">
+    <input type="text" class="form-control time" placeholder="Время старт" ng-model="addSt" maxlength="8" inputmode="numeric">
   </div>
   <div class="col-xs-12 col-sm-3">
-    <input type="tel"  class="form-control time" placeholder="Время финиш" ng-model="addFin" maxlength="8">
+    <input type="text"  class="form-control time" placeholder="Время финиш" ng-model="addFin" maxlength="8" inputmode="numeric">
  </div>
   
   <div class="col-xs-12 col-sm-3">
