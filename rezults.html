@@ -132,17 +132,17 @@ if ($(this).val().length>3) return false;
   <form role="form">
 <div class="row">
   <div class="col-xs-12 col-sm-3">
-    <input type="number" class="form-control" placeholder="Номер" ng-model="addNumber" >
+    <input type="number" class="form-control" placeholder="Номер" ng-model="addNumber" style="margin-bottom: 5px;" >
   </div>
   <div class="col-xs-12 col-sm-3">
-    <input type="text" class="form-control time" placeholder="Время старт" ng-model="addSt" maxlength="8" inputmode="numeric">
+    <input type="text" class="form-control time" placeholder="Время старт" ng-model="addSt" maxlength="8" inputmode="numeric" style="margin-bottom: 5px;">
   </div>
   <div class="col-xs-12 col-sm-3">
-    <input type="text"  class="form-control time" placeholder="Время финиш" ng-model="addFin" maxlength="8" inputmode="numeric">
+    <input type="text"  class="form-control time" placeholder="Время финиш" ng-model="addFin" maxlength="8" inputmode="numeric" style="margin-bottom: 5px;">
  </div>
   
   <div class="col-xs-12 col-sm-3">
-    <button ng-click="addItem()" type="submit"  class="btn btn-primary">Добавить</button>
+    <button ng-click="addItem()" type="submit"  class="btn btn-primary btn-block">Добавить</button>
    </div>
 </div>
 </form>
