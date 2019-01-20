@@ -32,6 +32,11 @@ app.filter('getTime', function() {
 		resStartInSec = result.start.split('.')[0]*3600 + result.start.split('.')[1]*60+ result.start.split('.')[2]*1;
 		resFinishInSec = result.finish.split('.')[0]*3600 + result.finish.split('.')[1]*60+ result.finish.split('.')[2]*1;
        delta = resFinishInSec - resStartInSec;
+	    
+	    if (delta < 0)
+	    {
+		return "Время старта раньше времени финиша!";    
+	    }
 	   
 	   var h = delta/3600 ^ 0 ;
        var m = (delta-h*3600)/60 ^ 0 ;
