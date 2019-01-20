@@ -69,9 +69,10 @@ app.controller("myCtrl", function($scope) {
     }
 	
 	
-    $scope.removeItem = function (x) {
+    $scope.removeItem = function (result) {
         $scope.errortext = "";    
-        $scope.results.splice(x, 1);
+       // $scope.results.splice(x, 1);
+	    $scope.results.splice($scope.results.indexOf(result),1);
     }
 	
 
@@ -192,7 +193,7 @@ if ($(this).val().length>3) return false;
    
     
 	 <td>
-	 <button type="button" ng-click="removeItem($index)" class="btn btn-danger">×</button>
+	 <button type="button" ng-click="removeItem(result)" class="btn btn-danger">×</button>
 	</td>
   </tr>
   </tbody>
