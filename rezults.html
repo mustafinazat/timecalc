@@ -3,7 +3,7 @@
 <title>Калькулятор разницы времени старта и финиша</title>
 <script src="./timecalc_files/angular.min.js"></script>
    <link href="./timecalc_files/bootstrap.min.css" rel="stylesheet">
-   <script src="./timecalc_files/jquery.min.js" type="text/javascript"></script>
+   <script src="./timecalc_files/mask.min.js" type="text/javascript"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<style>
 		table 
@@ -14,23 +14,23 @@
 <body>
 
 <script>
-var app = angular.module("myShoppingList", []); 
+var app = angular.module("myShoppingList", ['ui.mask']);  
 
 
 app.filter('getTime', function() {
     return function(result) {
         var resStartInSec, resFinishInSec, delta ;
-		if ( result.start.split('.')[0] > 24 || result.start.split('.')[0]<0) { return "Часы  старта в неправильном диапазоне" }
-		if ( result.start.split('.')[1] > 59 || result.start.split('.')[1]<0) { return "Минуты старта в неправильном диапазоне"}
-		if ( result.start.split('.')[2] > 59 || result.start.split('.')[2]<0) { return "Секунды старта в неправильном диапазоне" }
+		if ( result.start.split(':')[0] > 24 || result.start.split(':')[0]<0) { return "Часы  старта в неправильном диапазоне" }
+		if ( result.start.split(':')[1] > 59 || result.start.split(':')[1]<0) { return "Минуты старта в неправильном диапазоне"}
+		if ( result.start.split(':')[2] > 59 || result.start.split(':')[2]<0) { return "Секунды старта в неправильном диапазоне" }
 		
-		if ( result.finish.split('.')[0] > 24 || result.finish.split('.')[0]<0) { return "Часы  финиша в неправильном диапазоне" }
-		if ( result.finish.split('.')[1] > 59 || result.finish.split('.')[1]<0) { return "Минуты финиша в неправильном диапазоне"}
-		if ( result.finish.split('.')[2] > 59 || result.finish.split('.')[2]<0) { return"Секунды финиша в неправильном диапазоне" }
+		if ( result.finish.split(':')[0] > 24 || result.finish.split(':')[0]<0) { return "Часы  финиша в неправильном диапазоне" }
+		if ( result.finish.split(':')[1] > 59 || result.finish.split(':')[1]<0) { return "Минуты финиша в неправильном диапазоне"}
+		if ( result.finish.split(':')[2] > 59 || result.finish.split(':')[2]<0) { return"Секунды финиша в неправильном диапазоне" }
 		
 		
-		resStartInSec = result.start.split('.')[0]*3600 + result.start.split('.')[1]*60+ result.start.split('.')[2]*1;
-		resFinishInSec = result.finish.split('.')[0]*3600 + result.finish.split('.')[1]*60+ result.finish.split('.')[2]*1;
+		resStartInSec = result.start.split(':')[0]*3600 + result.start.split(':')[1]*60+ result.start.split(':')[2]*1;
+		resFinishInSec = result.finish.split(':')[0]*3600 + result.finish.split(':')[1]*60+ result.finish.split(':')[2]*1;
        delta = resFinishInSec - resStartInSec;
 	    
 	    if (delta < 0)
@@ -48,8 +48,8 @@ app.filter('getTime', function() {
 app.filter('getSec', function() {
     return function(result) {
         var resStartInSec, resFinishInSec, delta ;
-		resStartInSec = result.start.split('.')[0]*3600 + result.start.split('.')[1]*60+ result.start.split('.')[2]*1
-		resFinishInSec = result.finish.split('.')[0]*3600 + result.finish.split('.')[1]*60+ result.finish.split('.')[2]*1
+		resStartInSec = result.start.split(':')[0]*3600 + result.start.split(':')[1]*60+ result.start.split(':')[2]*1
+		resFinishInSec = result.finish.split(':')[0]*3600 + result.finish.split(':')[1]*60+ result.finish.split(':')[2]*1
        delta = resFinishInSec - resStartInSec;
 
         return delta;
@@ -67,8 +67,7 @@ app.controller("myCtrl", function($scope) {
 		if (!$scope.addSt) {return;}
 		if (!$scope.addFin) {return;}
        // if ($scope.rezults.indexOf($scope.addNumber) == -1) {
-            $scope.results.push({number:$scope.addNumber, start: $scope.addSt, finish: $scope.addFin });
-        //} else {
+            $scope.results.push({number:$scope.addNumber, start: $scope.addSt, finish: $scope.addFin, fio: $scope.addFio });  //} else {
           //  $scope.errortext = "The item is already in your shopping list.";
         //}
     }
@@ -87,8 +86,8 @@ app.controller("myCtrl", function($scope) {
         $scope.myOrderBy =  function(result) {
 		
 		  var resStartInSec, resFinishInSec, delta ;
-		resStartInSec = result.start.split('.')[0]*3600 + result.start.split('.')[1]*60+ result.start.split('.')[2]*1
-		resFinishInSec = result.finish.split('.')[0]*3600 + result.finish.split('.')[1]*60+ result.finish.split('.')[2]*1
+		resStartInSec = result.start.split(':')[0]*3600 + result.start.split(':')[1]*60+ result.start.split(':')[2]*1
+		resFinishInSec = result.finish.split(':')[0]*3600 + result.finish.split(':')[1]*60+ result.finish.split(':')[2]*1
        delta = resFinishInSec - resStartInSec;
 
         return delta;
@@ -98,25 +97,6 @@ app.controller("myCtrl", function($scope) {
 });
 
 
-
-$(document).ready(function(){
-
-$('.time').keypress(function(e) {
-
-if (!(e.which==8 || e.which==44 ||e.which==45 ||e.which==46 ||(e.which>47 && e.which<58))) return false;
-
-});
-
-
-
-$('.time').keyup(function(e) {
-
-if ($(this).val().length>3) return false;
-
-});
-
-
-});
 
 
 
@@ -132,22 +112,26 @@ if ($(this).val().length>3) return false;
   </div>
   <div class="panel-body">
    <div class="panel-body">
-  Время вводится через точку в формате чч.мм.сс (возможен ввод только точек и цифр)
+  Время вводится формате чч:мм:сс (возможен ввод только цифр)
   </div>
   
   <form role="form">
 <div class="row">
-  <div class="col-xs-12 col-sm-3">
+  <div class="col-xs-12 col-sm-1">
     <input type="number" class="form-control" placeholder="Номер" ng-model="addNumber" style="margin-bottom: 5px;" >
   </div>
-  <div class="col-xs-12 col-sm-3">
-    <input type="text" class="form-control time" placeholder="Время старт" ng-model="addSt" maxlength="8" inputmode="numeric" style="margin-bottom: 5px;">
+  <div class="col-xs-12 col-sm-2">
+    <input type="text" class="form-control time" placeholder="Время старт" ng-model="addSt" maxlength="8" inputmode="numeric" style="margin-bottom: 5px;" ui-mask="99:99:99"  ui-mask-placeholder ui-mask-placeholder-char="0" model-view-value="true">
   </div>
-  <div class="col-xs-12 col-sm-3">
-    <input type="text"  class="form-control time" placeholder="Время финиш" ng-model="addFin" maxlength="8" inputmode="numeric" style="margin-bottom: 5px;">
+  <div class="col-xs-12 col-sm-2">
+    <input type="text"  class="form-control time" placeholder="Время финиш" ng-model="addFin" maxlength="8" inputmode="numeric" style="margin-bottom: 5px;" ui-mask="99:99:99"  ui-mask-placeholder ui-mask-placeholder-char="0" model-view-value="true">
  </div>
+ 
+ <div class="col-xs-12 col-sm-5">
+    <input type="text" class="form-control" placeholder="ФИО" ng-model="addFio" style="margin-bottom: 5px;" >
+  </div>
   
-  <div class="col-xs-12 col-sm-3">
+  <div class="col-xs-12 col-sm-2">
     <button ng-click="addItem()" type="submit"  class="btn btn-primary btn-block">Добавить</button>
    </div>
 </div>
@@ -167,7 +151,7 @@ if ($(this).val().length>3) return false;
   
   <div class="input-group">
   <span class="input-group-addon">№</span>
-  <input type="text" class="form-control" ng-model="number" placeholder="Поиск по номеру"> 
+  <input type="text" class="form-control" ng-model="number" placeholder="Поиск"> 
   
 </div>
 <hr>
@@ -178,8 +162,9 @@ if ($(this).val().length>3) return false;
 
  <table class="table  table-bordered">
 <tr>
-    <td>#</td>
+   <td>#</td>
     <td>Номер</td>
+    <td>ФИО</td>
 	<td>Время <br>(старт)</td>
 	<td>Время <br>(финиш)</td>
 	<td>Итог</td>
@@ -191,6 +176,7 @@ if ($(this).val().length>3) return false;
   <tr ng-repeat="result in results | filter : number | orderBy: myOrderBy track by $index ">
     <td>{{ $index + 1 }}</td>
 	<td>{{ result.number }}</td>
+	<td>{{ result.fio }}</td>
     <td>{{ result.start }}</td>
     <td>{{ result.finish }}</td>
     <td>{{ result |getTime }}</td>
@@ -209,8 +195,6 @@ if ($(this).val().length>3) return false;
 
 
 
-
-   <p class="w3-text-red">{{errortext}}</p>
  
 </div>
 
