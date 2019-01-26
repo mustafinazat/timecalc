@@ -15,7 +15,23 @@
 
 <script>
 var app = angular.module("myShoppingList", ['ui.mask']);  
-
+angular.module("myShoppingList").directive("fileread", [function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                scope.$apply(function () {
+                    scope.fileread = changeEvent;
+					
+                    // or all selected files:
+                    // scope.fileread = changeEvent.target.files;
+                });
+            });
+        }
+    }
+}]);
 
 app.filter('getTime', function() {
     return function(result) {
@@ -79,7 +95,75 @@ app.controller("myCtrl", function($scope) {
 	    $scope.results.splice($scope.results.indexOf(result),1);
     }
 	
+	$scope.save = function () {
+	
+    function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+}
 
+function formatDate(date) {
+
+
+var ss = date.getSeconds();
+  if (ss < 10) ss = '0' + ss;
+  
+  var min = date.getMinutes();
+  if (min < 10) min = '0' + min;
+  
+  var hh = date.getHours();
+  if (hh < 10) hh = '0' + hh;
+  
+  
+  var dd = date.getDate();
+  if (dd < 10) dd = '0' + dd;
+
+  var mm = date.getMonth() + 1;
+  if (mm < 10) mm = '0' + mm;
+
+  var yy = date.getFullYear() % 100;
+  if (yy < 10) yy = '0' + yy;
+
+  return dd + '-' + mm + '-' + yy+' '+hh+'-'+min+'-'+ss;
+}
+
+var d = new Date(); // 30 Янв 2014
+
+	
+	var jsonData = JSON.stringify($scope.results);
+	
+	download(jsonData, 'dateCalcRes'+formatDate(d)+'.json', 'text/plain');
+    }
+	
+	
+	$scope.open = function () 
+	{
+	if (!$scope.file) {return;}
+	
+	//alert($scope.file);
+	
+	function readSingleFile(e) {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    alert(contents);
+	$scope.results = JSON.parse(contents);
+	 //$scope.results.push({number:"1", start: "", finish: "", fio: "1" });
+	//$scope.results.pop();
+  };
+  reader.readAsText(file);
+}
+
+readSingleFile($scope.file);
+
+	}
 	 
 	 
 	 
@@ -191,7 +275,28 @@ app.controller("myCtrl", function($scope) {
 </table>
   </div>
 </div>
+<hr>
+<div class="row">
+  <div class="col-xs-12 col-sm-4">
+   <button type="button" ng-click="save()" class="btn btn-primary" style="margin-bottom: 5px;">Сохранить в файл</button>
+    </div>
+  
 
+  
+  <div class="col-xs-12 col-sm-4">
+  
+  <div class="input-group">
+   <input type="file"  class="btn btn-default" id="file-input" fileread="file" style="margin-bottom: 5px;" >
+  <div class="input-group-btn">
+    
+	<button type="button" ng-click="open()" class="btn btn-primary" style="margin-bottom: 5px;">Открыть из файла</button>
+  </div>
+</div>
+
+
+  
+  </div>
+   </div>
 
 
 
